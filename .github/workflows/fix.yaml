@@ -16,7 +16,7 @@ jobs:
         find . -type f | grep '[<>:："\\|?*]' > s-invalid.txt
         if [ -s s-invalid.txt ]; then
           cat s-invalid.txt | tr '<>:："\\|?*' '_' > s-fix.txt
-          paste s-invalid.txt s-fix.txt | awk -F'\t' '{print "mv -i -- \047"\$1"\047 \047"\$2"\047"}' > s-cmd.txt
+          paste s-invalid.txt s-fix.txt | awk -F'\t' "{print \"mv -i -- '\\$1' '\\$2'\"}" > s-cmd.txt
           # Execute them (double-check before executing)
           # IMPORTANT: Commented out for safety. Review the commands before enabling this step.
           # bash s-cmd.txt
