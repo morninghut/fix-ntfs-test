@@ -13,9 +13,9 @@ jobs:
     - name: Find and fix invalid filenames
       run: |
         set +e
-        find . -type f | grep '[<>:"\\|?*]' > s-invalid.txt
+        find . -type f | grep '[<>:："\\|?*]' > s-invalid.txt
         if [ -s s-invalid.txt ]; then
-          cat s-invalid.txt | tr '<>:"\\|?*' '_' > s-fix.txt
+          cat s-invalid.txt | tr '<>:："\\|?*' '_' > s-fix.txt
           paste s-invalid.txt s-fix.txt | awk -F'\t' '{print "mv -i -- \047"\$1"\047 \047"\$2"\047"}' > s-cmd.txt
           # Execute them (double-check before executing)
           # IMPORTANT: Commented out for safety. Review the commands before enabling this step.
