@@ -13,9 +13,9 @@ jobs:
 
     - name: Find and replace ":" in file names
       run: |
-        find . -type f -name "*:*" | while read fname; do
+        find . -type f -name "*：*" | while read fname; do
           # Replace ":" with "-" in the file name
-          new_fname=$(echo $fname | tr ':' '-')
+          new_fname=$(echo $fname | tr '：' '-')
           mv -v "$fname" "$new_fname"
           echo "Renamed $fname to $new_fname"
         done
