@@ -1,28 +1,29 @@
-name: Fix Invalid Filenames
+name: Rename Files
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  fix-filenames:
+  rename-colons:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
+    - name: Check out the repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Fetch all history for all tags and branches
 
-    - name: Find and fix invalid filenames
+    - name: Find and replace ":" in file names
       run: |
-        set +e
-        find . -type f | grep '[<>:："\\|?*]' > s-invalid.txt
-        if [ -s s-invalid.txt ]; then
-          cat s-invalid.txt | tr '<>:："\\|?*' '_' > s-fix.txt
-          paste s-invalid.txt s-fix.txt | awk -F'\t' "{print \"mv -i -- '\\$1' '\\$2'\"}" > s-cmd.txt
-          # Execute them (double-check before executing)
-          # IMPORTANT: Commented out for safety. Review the commands before enabling this step.
-        #   bash s-cmd.txt
-          cat s-cmd.txt
-        else
-          echo "No invalid filenames found."
-        fi
-        set -e
-      shell: /usr/bin/bash -e {0}
+        find . -type f -name "*:*" | while read fname; do
+          # Replace ":" with "-" in the file name
+          new_fname=$(echo $fname | tr ':' '-')
+          mv -v "$fname" "$new_fname"
+          echo "Renamed $fname to $new_fname"
+        done
+
+    - name: Commit and push if necessary
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add -u
+        git commit -m "Replace ':' with '-' in filenames" || echo "No changes to commit"
+        git push
