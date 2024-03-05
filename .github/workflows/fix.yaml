@@ -19,7 +19,8 @@ jobs:
           paste s-invalid.txt s-fix.txt | awk -F'\t' "{print \"mv -i -- '\\$1' '\\$2'\"}" > s-cmd.txt
           # Execute them (double-check before executing)
           # IMPORTANT: Commented out for safety. Review the commands before enabling this step.
-          # bash s-cmd.txt
+        #   bash s-cmd.txt
+          cat s-cmd.txt
         else
           echo "No invalid filenames found."
         fi
